@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13966, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Island
+  m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.SceneTemplate.SceneTemplateAsset
+  templateScene: {fileID: 102900000, guid: 2680aefba27a43b0ebd7bf0609f57d14, type: 3}
+  templateName: 
+  description: 
+  preview: {fileID: 0}
+  dependencies:
+  - dependency: {fileID: 8400000, guid: aff564194f13013eb950222c06407d95, type: 2}
+    instantiationMode: 1
+  - dependency: {fileID: 1236257789494122, guid: 8b0b86b42def11849a8eba21f4a6a684, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 1487774384131766, guid: ee329c3cd08e58645834d20702d7f6c6, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 8300000, guid: e5978b9c2b67f4ed09d78ebe918e6775, type: 3}
+    instantiationMode: 1
+  - dependency: {fileID: 2100000, guid: 5ba7bc32a9884dbd5ac109a73f06d847, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 1694449805434718, guid: 6f1a7354265853f44b0ed5e2e43676ad, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 100000, guid: bf2593fe0c804b84688e307cfb1ddfae, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2100000, guid: 28f0b13c7e9707746b5e0b3336181560, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 6a376fb3e11ce334ca96f417cead6576, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2100000, guid: a2241f6cfc02895fab135a9519481f21, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 100000, guid: 6f966b9a7c817ed49973b4a8762cbbdf, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 100004, guid: b812e42521a5a27499e76cc5ed56e3ac, type: 3}
+    instantiationMode: 0
+  templatePipeline: {fileID: 0}
+  badge: {fileID: 0}
+  addToDefaults: 0
