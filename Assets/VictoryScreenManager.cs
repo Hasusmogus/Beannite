@@ -4,31 +4,44 @@ using UnityEngine.SceneManagement;
 public class VictoryScreenManager : MonoBehaviour
 {
     [Header("UI Panels")]
+    [Tooltip("Leave blank to automatically grab the first child panel of this canvas.")]
     public GameObject victoryScreenUI;
 
     [Header("Tracking Settings")]
-    [Tooltip("How often (in seconds) the script checks the scene for remaining enemies.")]
     public float checkInterval = 0.5f;
     
+    [Header("Audio Settings")]
+    [Tooltip("The main background music AudioSource in your scene.")]
+    public AudioSource backgroundMusicSource;
+    [Tooltip("The track that plays when the player wins.")]
+    public AudioClip victoryMusicClip;
+
     private float nextCheckTime = 0f;
     private bool gameWon = false;
+
+    void Awake()
+    {
+        // Fallback layout check
+        if (victoryScreenUI == null && transform.childCount > 0)
+        {
+            victoryScreenUI = transform.GetChild(0).gameObject;
+        }
+    }
 
     void Update()
     {
         if (gameWon) return;
 
-        if (Time.time >= nextCheckTime)
+        if (Time.unscaledTime >= nextCheckTime)
         {
-            nextCheckTime = Time.time + checkInterval;
+            nextCheckTime = Time.unscaledTime + checkInterval;
             CheckRemainingEnemies();
         }
     }
 
     private void CheckRemainingEnemies()
     {
-        // --- FIXED: Removed FindObjectsSortMode parameter to resolve deprecation warning ---
         EntityHealth[] allEntities = FindObjectsByType<EntityHealth>(FindObjectsInactive.Exclude);
-        
         int activeEnemiesCount = 0;
 
         foreach (EntityHealth entity in allEntities)
@@ -52,9 +65,22 @@ public class VictoryScreenManager : MonoBehaviour
     {
         gameWon = true;
 
+        // Force time scale normal briefly to allow engine processes to process audio/UI activation safely
+        Time.timeScale = 1f; 
+
+        // Swap to victory soundscape track
+        if (backgroundMusicSource != null && victoryMusicClip != null)
+        {
+            backgroundMusicSource.Stop();
+            backgroundMusicSource.clip = victoryMusicClip;
+            backgroundMusicSource.loop = false; 
+            backgroundMusicSource.Play();
+        }
+
         if (victoryScreenUI != null)
         {
             victoryScreenUI.SetActive(true);
+            Debug.Log($"[VICTORY] Interface panel active: {victoryScreenUI.name}");
         }
 
         Cursor.lockState = CursorLockMode.None;
