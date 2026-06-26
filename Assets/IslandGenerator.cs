@@ -1,4 +1,6 @@
 using UnityEngine;
+// CRITICAL: Namespace needed for building pathfinding data at runtime
+using Unity.AI.Navigation; 
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class IslandGenerator : MonoBehaviour
@@ -6,6 +8,10 @@ public class IslandGenerator : MonoBehaviour
     [Header("Spawning References")]
     public EnemySpawner enemySpawner;
     public GameObject playerObject;
+
+    [Header("Navigation Setup")]
+    [Tooltip("Drag your NavMeshSurface GameObject here from the scene hierarchy.")]
+    public NavMeshSurface navMeshSurface;
 
     [Header("Map Dimensions")]
     public int mapSize = 300;
@@ -60,7 +66,6 @@ public class IslandGenerator : MonoBehaviour
                 float a = (x / (float)mapSize) * 2f - 1f;
                 float b = (y / (float)mapSize) * 2f - 1f;
 
-                // Enforced Mathf on all mathematical equations below
                 float value = Mathf.Max(Mathf.Abs(a), Mathf.Abs(b));
 
                 float p = 3f;
@@ -155,9 +160,26 @@ public class IslandGenerator : MonoBehaviour
             Debug.Log("Island Generator: Player safely snapped to surface layer cleanly!");
         }
 
+        // --- RUNTIME NAVMESH BAKE TRIGGER ---
+        // Forces the pathfinding network to generate AFTER player positioning but BEFORE spawning AI enemies
+        BuildNavigationAtRuntime();
+
         if (enemySpawner != null)
         {
             enemySpawner.StartSpawning();
+        }
+    }
+
+    void BuildNavigationAtRuntime()
+    {
+        if (navMeshSurface != null)
+        {
+            Debug.Log("[GENERATOR] Low-poly mesh completed! Baking runtime AI path grid now...");
+            navMeshSurface.BuildNavMesh();
+        }
+        else
+        {
+            Debug.LogWarning("[GENERATOR] NavMeshSurface link missing on inspector panel. Enemy path loops might run blindly into hazardous boundaries!");
         }
     }
 
