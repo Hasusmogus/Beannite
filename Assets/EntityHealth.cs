@@ -33,7 +33,7 @@ public class EntityHealth : MonoBehaviour
             isActualSceneTemplate = true;
         }
 
-        if (masterSceneTemplateInstance != this)
+        if (!System.Object.ReferenceEquals(masterSceneTemplateInstance, this))
         {
             isTemplateForGeneration = false;
             isActualSceneTemplate = false;
@@ -41,6 +41,9 @@ public class EntityHealth : MonoBehaviour
 
         if (isActualSceneTemplate)
         {
+            // --- FIX: Teleport the master template deep into the void out of sight ---
+            transform.position = new Vector3(0, -10000f, 0);
+
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
             
             if (movementScript != null) movementScript.enabled = false;
@@ -58,7 +61,7 @@ public class EntityHealth : MonoBehaviour
         currentHealth = maxHealth;
         spawnTime = Time.time;
 
-        if (masterSceneTemplateInstance != this)
+        if (!System.Object.ReferenceEquals(masterSceneTemplateInstance, this))
         {
             isTemplateForGeneration = false;
             isActualSceneTemplate = false;
@@ -118,7 +121,6 @@ public class EntityHealth : MonoBehaviour
         {
             Debug.Log("The real Human Player has died!");
 
-            // --- FIXED: Swapped to FindAnyObjectByType to prevent deprecation warnings ---
             DeathScreenManager deathScreen = FindAnyObjectByType<DeathScreenManager>(FindObjectsInactive.Include);
             if (deathScreen != null)
             {
