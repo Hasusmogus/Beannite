@@ -41,7 +41,7 @@ public class EntityHealth : MonoBehaviour
 
         if (isActualSceneTemplate)
         {
-            // --- FIX: Teleport the master template deep into the void out of sight ---
+            // Teleport the master template deep into the void out of sight
             transform.position = new Vector3(0, -10000f, 0);
 
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
@@ -76,6 +76,12 @@ public class EntityHealth : MonoBehaviour
             Renderer[] renderers = GetComponentsInChildren<Renderer>();
             foreach (var rend in renderers) if (rend != null) rend.enabled = true;
         }
+    }
+
+    // --- NEW PUBLIC GETTER: Allows the UI Health Bar Slider to read this value ---
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
     }
 
     public void TakeDamage(float amount)
