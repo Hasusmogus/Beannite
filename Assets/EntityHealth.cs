@@ -13,7 +13,7 @@ public class EntityHealth : MonoBehaviour
     private float spawnTime;
 
     [Header("Components to Disable on Death")]
-    public MonoBehaviour movementScript;
+    public MonoBehaviour movementScript; 
 
     [Header("Entity Type")]
     public bool isPlayer = false;
@@ -42,7 +42,7 @@ public class EntityHealth : MonoBehaviour
         if (isActualSceneTemplate)
         {
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-
+            
             if (movementScript != null) movementScript.enabled = false;
 
             Collider[] colliders = GetComponentsInChildren<Collider>();
@@ -63,8 +63,8 @@ public class EntityHealth : MonoBehaviour
             isTemplateForGeneration = false;
             isActualSceneTemplate = false;
 
-            gameObject.layer = LayerMask.NameToLayer("Enemy");
-
+            gameObject.layer = LayerMask.NameToLayer("Enemy"); 
+            
             if (movementScript != null) movementScript.enabled = true;
 
             Collider[] colliders = GetComponentsInChildren<Collider>();
@@ -82,7 +82,7 @@ public class EntityHealth : MonoBehaviour
         bool isRealPlayer = isPlayer;
         if (movementScript is PlayerController pc && pc.isAI)
         {
-            isRealPlayer = false;
+            isRealPlayer = false; 
         }
 
         if (isRealPlayer && (Time.time - spawnTime) < gracePeriodDuration)
@@ -101,7 +101,7 @@ public class EntityHealth : MonoBehaviour
 
     void Die()
     {
-        if (isActualSceneTemplate) return;
+        if (isActualSceneTemplate) return; 
 
         isDead = true;
 
@@ -111,19 +111,29 @@ public class EntityHealth : MonoBehaviour
         bool isRealPlayer = isPlayer;
         if (movementScript is PlayerController pc && pc.isAI)
         {
-            isRealPlayer = false;
+            isRealPlayer = false; 
         }
 
         if (isRealPlayer)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
             Debug.Log("The real Human Player has died!");
+
+            // --- FIXED: Swapped to FindAnyObjectByType to prevent deprecation warnings ---
+            DeathScreenManager deathScreen = FindAnyObjectByType<DeathScreenManager>(FindObjectsInactive.Include);
+            if (deathScreen != null)
+            {
+                deathScreen.ShowDeathScreen();
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
         else
         {
             Debug.Log($"{gameObject.name} (FFA Clone/Enemy) has died!");
-
+            
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
             foreach (Transform child in transform)
             {
@@ -136,7 +146,7 @@ public class EntityHealth : MonoBehaviour
             Renderer[] renderers = GetComponentsInChildren<Renderer>();
             foreach (var rend in renderers) if (rend != null) rend.enabled = false;
 
-            Destroy(gameObject, 5.0f);
+            Destroy(gameObject, 5.0f); 
         }
     }
 }
