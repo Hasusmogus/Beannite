@@ -22,6 +22,10 @@ public class PlayerController : MonoBehaviour
     private float nextShootTime = 0f;
     private WeaponManager weaponManager;
 
+    [Header("Audio Customization")]
+    [Tooltip("Slightly variation in pitch for every shot so the sound feels organic.")]
+    [Range(0f, 0.3f)] public float pitchRandomness = 0.05f;
+
     private CharacterController characterController;
     private Vector3 velocity;
     private bool isGrounded;
@@ -142,6 +146,9 @@ public class PlayerController : MonoBehaviour
         {
             nextShootTime = Time.time + activeGun.fireRate;
 
+            // --- AUDIO SYSTEM INTEGRATION ---
+            PlayActiveWeaponSound();
+
             // --- FIXED MUZZLE FLASH SYSTEM OVERRIDE ---
             ParticleSystem flash = weaponManager.GetActiveMuzzleFlash();
             if (flash != null)
@@ -255,6 +262,9 @@ public class PlayerController : MonoBehaviour
 
         nextShootTime = Time.time + activeGun.fireRate;
 
+        // --- AUDIO SYSTEM INTEGRATION ---
+        PlayActiveWeaponSound();
+
         ParticleSystem flash = weaponManager.GetActiveMuzzleFlash();
         if (flash != null)
         {
@@ -300,6 +310,23 @@ public class PlayerController : MonoBehaviour
                 hitHealth.TakeDamage(activeGun.damage);
                 Debug.Log($"[HIT] {gameObject.name} shot {hit.transform.name}!");
             }
+        }
+    }
+
+    private void PlayActiveWeaponSound()
+    {
+        if (weaponManager == null) return;
+
+        // Automatically searches the active weapon model hierarchy for an AudioSource component
+        AudioSource weaponAudio = weaponManager.GetComponentInChildren<AudioSource>();
+        
+        if (weaponAudio != null && weaponAudio.clip != null)
+        {
+            // Apply slight organic pitch shifting
+            weaponAudio.pitch = Random.Range(1f - pitchRandomness, 1f + pitchRandomness);
+            
+            // PlayOneShot handles fast overlapping fires smoothly
+            weaponAudio.PlayOneShot(weaponAudio.clip);
         }
     }
 
